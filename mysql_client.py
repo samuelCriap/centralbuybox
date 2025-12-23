@@ -26,12 +26,22 @@ _connection_pool = None
 def _load_mysql_config():
     """Carrega configuração MySQL do arquivo de configuração"""
     import json
+    import sys
     from pathlib import Path
     
-    config_paths = [
-        Path(__file__).parent / "config" / "server_config.json",
-        Path(os.environ.get('APPDATA', '')) / "CentralNetshoes" / "config" / "server_config.json",
-    ]
+    config_paths = []
+    
+    # Se executando como EXE, verificar ao lado do executável PRIMEIRO
+    if getattr(sys, 'frozen', False):
+        exe_dir = Path(sys.executable).parent
+        config_paths.append(exe_dir / "config" / "server_config.json")
+        # Também verificar dentro do bundle
+        config_paths.append(Path(sys._MEIPASS) / "config" / "server_config.json")
+    else:
+        config_paths.append(Path(__file__).parent / "config" / "server_config.json")
+    
+    # AppData como fallback
+    config_paths.append(Path(os.environ.get('APPDATA', '')) / "CentralNetshoes" / "config" / "server_config.json")
     
     for config_path in config_paths:
         if config_path.exists():
