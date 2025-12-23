@@ -278,6 +278,42 @@ def main(page: ft.Page):
                 ft.Container(height=30),
                 *menu_items,
                 ft.Container(expand=True),
+                # Indicador de usuário online
+                ft.Container(
+                    content=ft.Column([
+                        ft.Row([
+                            ft.Container(
+                                width=10, 
+                                height=10, 
+                                bgcolor="#22C55E",  # Verde
+                                border_radius=5,  # Bolinha
+                            ),
+                            ft.AnimatedSwitcher(
+                                content=ft.Text(
+                                    usuario_logado[0].get("username", "")[:12], 
+                                    size=11, 
+                                    color="#FFFFFF",
+                                    weight=ft.FontWeight.W_500,
+                                    max_lines=1,
+                                    overflow=ft.TextOverflow.ELLIPSIS,
+                                ) if menu_expandido[0] else ft.Container(),
+                                duration=200,
+                                transition=ft.AnimatedSwitcherTransition.FADE,
+                            ),
+                        ], spacing=6, alignment=ft.MainAxisAlignment.CENTER),
+                        ft.AnimatedSwitcher(
+                            content=ft.Text(
+                                "Online", 
+                                size=9, 
+                                color="#22C55E",
+                                opacity=0.8,
+                            ) if menu_expandido[0] else ft.Container(),
+                            duration=200,
+                            transition=ft.AnimatedSwitcherTransition.FADE,
+                        ),
+                    ], spacing=2, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                    padding=ft.padding.only(bottom=10),
+                ),
                 ft.Column([
                     ft.IconButton(
                         ft.Icons.BRIGHTNESS_6, 

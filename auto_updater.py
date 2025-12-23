@@ -12,7 +12,7 @@ from pathlib import Path
 from datetime import datetime
 
 # Versão atual da aplicação
-CURRENT_VERSION = "2.1.0"
+CURRENT_VERSION = "2.2.0"
 
 # Configurações do GitHub
 GITHUB_REPO = "samuelCriap/centralbuybox"
