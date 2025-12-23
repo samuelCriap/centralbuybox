@@ -208,7 +208,9 @@ def criar_tela_configuracoes(page: ft.Page, is_dark: list, toggle_theme_callback
                 border_radius=10,
             ),
             
-        ]),
+            ft.Container(height=30),  # Espaço extra no final para melhor scroll
+            
+        ], scroll=ft.ScrollMode.AUTO),  # ← Scroll adicionado aqui
         expand=True,
         padding=20,
     )
