@@ -1,0 +1,15 @@
+gspread
+google-auth
+google-auth-oauthlib
+pandas
+flet
+plotly
+openpyxl
+Pillow
+reportlab
+kaleido
+aiohttp
+tqdm
+beautifulsoup4
+lxml
+mysql-connector-python
