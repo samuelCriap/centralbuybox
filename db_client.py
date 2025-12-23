@@ -6,15 +6,25 @@ baseado na configuração do servidor.
 Permite alternar entre bancos sem modificar os arquivos que importam as funções.
 """
 import os
+import sys
 import json
 from pathlib import Path
 
 def _get_db_type():
     """Determina qual tipo de banco usar baseado na configuração"""
-    config_paths = [
-        Path(__file__).parent / "config" / "server_config.json",
-        Path(os.environ.get('APPDATA', '')) / "CentralNetshoes" / "config" / "server_config.json",
-    ]
+    config_paths = []
+    
+    # Se executando como EXE, verificar ao lado do executável
+    if getattr(sys, 'frozen', False):
+        exe_dir = Path(sys.executable).parent
+        config_paths.append(exe_dir / "config" / "server_config.json")
+        # Também verificar dentro do bundle
+        config_paths.append(Path(sys._MEIPASS) / "config" / "server_config.json")
+    else:
+        config_paths.append(Path(__file__).parent / "config" / "server_config.json")
+    
+    # AppData como fallback
+    config_paths.append(Path(os.environ.get('APPDATA', '')) / "CentralNetshoes" / "config" / "server_config.json")
     
     for config_path in config_paths:
         if config_path.exists():
@@ -25,7 +35,7 @@ def _get_db_type():
             except Exception:
                 pass
     
-    return "sqlite"  # Padrão
+    return "mysql"  # Padrão agora é MySQL
 
 
 # Determinar tipo de banco e importar módulo correto

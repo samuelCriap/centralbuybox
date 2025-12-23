@@ -4,20 +4,43 @@ Gerencia configuração específica do MySQL
 """
 import json
 import os
+import sys
 from pathlib import Path
+
+
+def get_base_path():
+    """Retorna o diretório base da aplicação (suporta PyInstaller)"""
+    if getattr(sys, 'frozen', False):
+        # Executando como EXE (PyInstaller)
+        return Path(sys._MEIPASS)
+    else:
+        # Executando como script Python
+        return Path(__file__).parent
 
 
 def get_config_path():
     """Retorna caminho do arquivo de configuração"""
-    # Primeiro tenta no diretório do script
-    local_path = Path(__file__).parent / "config" / "server_config.json"
+    # Primeiro tenta no diretório do executável (para config editável)
+    if getattr(sys, 'frozen', False):
+        exe_dir = Path(sys.executable).parent
+        exe_config = exe_dir / "config" / "server_config.json"
+        if exe_config.exists():
+            return exe_config
+    
+    # Tenta no diretório base (ou bundle)
+    base_path = get_base_path()
+    local_path = base_path / "config" / "server_config.json"
     if local_path.exists():
         return local_path
     
-    # Depois tenta no AppData (para exe)
+    # Tenta no AppData (para exe)
     appdata_path = Path(os.environ.get('APPDATA', '')) / "CentralNetshoes" / "config" / "server_config.json"
     if appdata_path.exists():
         return appdata_path
+    
+    # Se executando como EXE, prefere salvar ao lado do executável
+    if getattr(sys, 'frozen', False):
+        return Path(sys.executable).parent / "config" / "server_config.json"
     
     # Se nenhum existe, retorna o local
     return local_path

@@ -23,7 +23,11 @@ def get_base_path():
 def get_config_dir():
     """Retorna o diretório de configuração persistente"""
     if getattr(sys, 'frozen', False):
-        # Executando como exe - usar AppData para persistência
+        # Executando como exe - PRIMEIRO verificar ao lado do executável
+        exe_dir = Path(sys.executable).parent / "config"
+        if exe_dir.exists():
+            return exe_dir
+        # Fallback para AppData
         appdata = os.environ.get('APPDATA', os.path.expanduser('~'))
         return Path(appdata) / "CentralNetshoes" / "config"
     else:
